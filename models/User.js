@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import { Schema, model } from 'mongoose';
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
     username: {type: String, required: true},
     email: {type: String, required: true, unique: true}, 
     uid: {type: String, required: true, unique: true},
@@ -9,8 +9,10 @@ const UserSchema = new mongoose.Schema({
     phone: {type: String, required: false},
     userType: {type: String, required: true, default: "Client", enum: ['Admin', 'Agent', 'Client', 'Landlord']},
     profile: {
-        type: String, required: true, default: ''
+        type: String, 
+        required: true, 
+        default: 'https://picsum.photos/200/300'
     }
 }, {timestamps: true});
 
-module.exports = mongoose.model('User', UserSchema)
+export default model('User', UserSchema)

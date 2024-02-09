@@ -1,12 +1,25 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import { readFileSync } from 'fs';
+import admin from 'firebase-admin'
+import debug from 'debug';
+const serviceAccount = JSON.parse(readFileSync('./service-account.json', 'utf-8'))
+
+
+
 const app = express()
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
 const port = process.env.PORT || 3000
 
 dotenv.config()
 
-const authRouter = require('./routes/auth')
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+})
+
+import authRouter from './routes/auth.js'
 
 mongoose.connect(process.env.MONGO_URL)
 .then(() => console.log('Db connected')).catch((err) => console.log(err))

@@ -1,11 +1,11 @@
-const jwt = require('jsonwebtoken');
+import { verify } from 'jsonwebtoken';
 
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
     if (authHeader){
         const token = authHeader.split('')[1]
-        jwt.verify(token, process.env.JWTSEC, async (err, user) => {
+        verify(token, process.env.JWTSEC, async (err, user) => {
             if(err){
                 res.status(403).json({status: false, message: 'invalid token'});
             }
@@ -57,4 +57,4 @@ const verifyAdmin = (req, res, next) => {
 }
 
 
-module.exports = {verifyToken, verifyAuthorization, verifyVendor, verifyDriver, verifyAdmin}
+export default {verifyToken, verifyAuthorization, verifyVendor, verifyDriver, verifyAdmin}

@@ -1,42 +1,52 @@
-const User = require('../models/User')
-const CryptoJS = require('crypto-js')
-const jwt = require('jsonwebtoken')
-const admin = require('firebase-admin')
 
-module.exports = {
+import User from '../models/User.js'
+import CryptoJS from 'crypto-js'
+import jwt from 'jsonwebtoken'
+import admin from 'firebase-admin'
+import debug from 'debug'
+
+
+const authController = {
     createUser: async (req, res) => {
         const user = req.body;
+
         try {
             await admin.auth().getUserByEmail(user.email);
 
-            res.status(400).json({message: "Email already registered"})
-
-        } catch (err) {
-            if (err.code === 'auth/user-not-found'){
+            res.status(400).json({ message: "Email already registered" })
+        } catch (error) {
+            if (error.code === 'auth/user-not-found') {
                 try {
+                    
                     const userResponse = await admin.auth().createUser({
-                        email: user.email, 
-                        password: user.password, 
-                        emailVerified: false, 
-                        disabled: false 
-                    })
-                    console.log(userResponse.uid);
-
-                    const newUsuer = new User({
-                        username: user.username, 
                         email: user.email,
-                        password: CryptoJS.AES.encrypt(user.password, process.env.SECRET).toString(), 
+                        password: user.password,
+                        emailVerified: false,
+                        disabled: false
+                    })
+                    
+                    const newUser = new User({
+                        username: user.username,
+                        email: user.email,
+                        address: user.address,
+                        password: CryptoJS.AES.encrypt(user.password, process.env.SECRET).toString(),
                         uid: userResponse.uid,
                         userType: 'Client'
                     })
 
-                    await newUsuer.save()
-                    res.status(201).json({status: true}) 
-                } catch (err) {
-                    res.status(500).json({status: false, err: "Erroro creating user"})
+                    await newUser.save() 
+                   
+                    res.status(201).json({ 
+                        status: true, 
+                    message: "Registration successful" })
+                  
+                } catch (error) {
+                    res.status(500).json({ status: false, error: "Error creating user" })
                 }
             }
+
         }
+
     },
 
     loginUser: async (req, res) => {
@@ -64,4 +74,6 @@ module.exports = {
         }
 
     }
-}
+};
+
+export default authController;
