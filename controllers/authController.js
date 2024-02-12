@@ -3,11 +3,22 @@ import User from '../models/User.js'
 import CryptoJS from 'crypto-js'
 import jwt from 'jsonwebtoken'
 import admin from 'firebase-admin'
+import Joi from 'joi'
 import debug from 'debug'
+import { validateRegister } from '../helpers/validator.js'
 
 
 const authController = {
+    
     createUser: async (req, res) => {
+
+        const {error, value} = validateRegister(req.body)
+        if (error){
+            res.status(400).send(error.details[0].message);
+            return;
+        }
+
+
         const user = req.body;
 
         try {
