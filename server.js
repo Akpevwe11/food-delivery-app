@@ -20,6 +20,7 @@ admin.initializeApp({
 })
 
 import authRouter from './routes/auth.js'
+import userRouter from './routes/user.js'
 
 mongoose.connect(process.env.MONGO_URL)
 .then(() => console.log('Db connected')).catch((err) => console.log(err))
@@ -28,6 +29,7 @@ mongoose.connect(process.env.MONGO_URL)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/', authRouter)
+app.use('/api/users', userRouter)
 
 
 

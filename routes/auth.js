@@ -1,6 +1,4 @@
 import { Router } from 'express';
-import Joi from 'joi';
-
 import authController from '../controllers/authController.js'
 
 const router = Router();
