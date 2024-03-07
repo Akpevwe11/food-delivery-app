@@ -1,6 +1,6 @@
- import User from "../models/User"
+import User from "../models/User.js"
 
-module.exports = {
+const userController = {
     getUser: async (req, res) => {
         const userId = req.user.id 
         try {
@@ -38,3 +38,5 @@ module.exports = {
            
     }
 }
+
+export default userController;

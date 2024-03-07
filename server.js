@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import { readFileSync } from 'fs';
 import admin from 'firebase-admin'
 import debug from 'debug';
+import morgan from 'morgan';
 const serviceAccount = JSON.parse(readFileSync('./service-account.json', 'utf-8'))
 
 
@@ -28,6 +29,8 @@ mongoose.connect(process.env.MONGO_URL)
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(morgan('tiny'));
+
 app.use('/', authRouter)
 app.use('/api/users', userRouter)
 
